@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Formula — BounceUp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --cream: #f5f0e8; --cream2: #ede8dc; --sand: #d9cfc0;
+  --teal: #4a9d8a; --teal-dark: #2d7a68; --teal-light: #7bbcad;
+  --dark: #1a1a18; --mid: #4a4a44; --text: #2c2c28;
+  --white: #ffffff; --gold: #c4a55a;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
+
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 16px 60px; display: flex; align-items: center; justify-content: space-between; background: rgba(245,240,232,0.97); backdrop-filter: blur(14px); box-shadow: 0 1px 0 rgba(0,0,0,0.07); }
+.nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: var(--dark); letter-spacing: 0.04em; text-decoration: none; }
+.nav-links { display: flex; gap: 36px; list-style: none; }
+.nav-links a { font-size: 14px; color: var(--mid); text-decoration: none; letter-spacing: 0.06em; position: relative; transition: color 0.3s; }
+.nav-links a::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 1px; background: var(--teal); transition: width 0.3s; }
+.nav-links a:hover::after, .nav-links li.active a::after { width: 100%; }
+.nav-links li.active a { color: var(--dark); font-weight: 500; }
+
+/* PAGE HERO */
+.page-hero {
+  min-height: 70vh;
+  background: var(--dark);
+  display: grid; grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 120px 60px 80px;
+  position: relative; overflow: hidden;
+  gap: 60px;
+}
+.page-hero::before { content: ''; position: absolute; bottom: -200px; left: -200px; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(74,157,138,0.1) 0%, transparent 70%); }
+.hero-line { width: 32px; height: 1px; background: var(--teal); margin-bottom: 20px; opacity:0; animation: fadeUp 0.6s ease 0.1s forwards; }
+.hero-eyebrow { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--teal-light); margin-bottom: 14px; display: block; opacity:0; animation: fadeUp 0.7s ease 0.2s forwards; }
+.hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(40px, 5.5vw, 68px); font-weight: 300; color: var(--white); letter-spacing: 0.04em; line-height: 1.08; opacity:0; animation: fadeUp 0.8s ease 0.35s forwards; }
+.hero-title em { font-style: italic; color: var(--teal-light); }
+.hero-desc { font-size: 15px; color: rgba(255,255,255,0.5); line-height: 1.9; max-width: 460px; margin-top: 20px; opacity:0; animation: fadeUp 0.8s ease 0.5s forwards; }
+.hero-stats { display: flex; gap: 40px; margin-top: 40px; opacity:0; animation: fadeUp 0.8s ease 0.65s forwards; }
+.stat-item { }
+.stat-num { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300; color: var(--teal-light); }
+.stat-label { font-size: 11px; color: rgba(255,255,255,0.4); letter-spacing: 0.08em; margin-top: 2px; }
+
+.hero-visual { display: flex; align-items: center; justify-content: center; position: relative; opacity:0; animation: fadeIn 1s ease 0.6s forwards; }
+.hero-bottle-wrap { position: relative; width: 220px; }
+.hero-bottle-wrap img { width: 100%; filter: drop-shadow(0 30px 60px rgba(74,157,138,0.3)); animation: floatBottle 4s ease-in-out infinite; }
+.orbit { position: absolute; border-radius: 50%; border: 1px solid rgba(74,157,138,0.2); top: 50%; left: 50%; transform: translate(-50%,-50%); animation: spin 20s linear infinite; }
+.orbit:nth-child(2) { width: 290px; height: 290px; }
+.orbit:nth-child(3) { width: 370px; height: 370px; animation-duration: 30s; animation-direction: reverse; }
+.orbit-dot { position: absolute; width: 7px; height: 7px; border-radius: 50%; background: var(--teal); top: 0; left: 50%; transform: translate(-50%, -50%); }
+
+/* SECTION HELPERS */
+.section-eyebrow { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--teal); margin-bottom: 10px; display: block; }
+.section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(30px, 4vw, 48px); font-weight: 300; color: var(--dark); letter-spacing: 0.04em; }
+.section-title em { font-style: italic; color: var(--teal-dark); }
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* INGREDIENTS GRID */
+.ingredients-section { padding: 100px 60px; background: var(--cream); }
+.ingredients-header { text-align: center; margin-bottom: 64px; }
+.ingredients-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  max-width: 1100px; margin: 0 auto;
+}
+.ing-card {
+  background: var(--cream2);
+  padding: 40px 28px;
+  position: relative; overflow: hidden;
+  transition: background 0.3s;
+  cursor: default;
+}
+.ing-card:hover { background: var(--dark); }
+.ing-card:hover .ing-name,
+.ing-card:hover .ing-role { color: var(--white); }
+.ing-card:hover .ing-desc { color: rgba(255,255,255,0.5); }
+.ing-card:hover .ing-line { background: var(--teal-light); }
+
+.ing-number { font-family: 'Cormorant Garamond', serif; font-size: 48px; font-weight: 300; color: rgba(74,157,138,0.15); line-height: 1; margin-bottom: 16px; transition: color 0.3s; }
+.ing-card:hover .ing-number { color: rgba(74,157,138,0.3); }
+.ing-line { width: 24px; height: 2px; background: var(--teal); margin-bottom: 14px; transition: background 0.3s; }
+.ing-name { font-size: 15px; font-weight: 500; color: var(--dark); margin-bottom: 6px; transition: color 0.3s; }
+.ing-role { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal-dark); margin-bottom: 12px; transition: color 0.3s; }
+.ing-desc { font-size: 13px; color: var(--mid); line-height: 1.7; transition: color 0.3s; }
+
+/* SCIENCE SECTION */
+.science-section {
+  background: var(--dark);
+  padding: 100px 60px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 80px; align-items: center;
+  position: relative; overflow: hidden;
+}
+.science-section::after { content: ''; position: absolute; top: -150px; right: -150px; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(74,157,138,0.1) 0%, transparent 70%); }
+.sci-eyebrow { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--teal-light); margin-bottom: 14px; display: block; }
+.sci-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(32px, 4vw, 50px); font-weight: 300; color: var(--white); line-height: 1.1; margin-bottom: 20px; }
+.sci-title em { font-style: italic; color: var(--teal-light); }
+.sci-desc { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.9; margin-bottom: 36px; }
+.sci-points { list-style: none; }
+.sci-points li { padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.07); display: flex; gap: 16px; align-items: flex-start; }
+.sci-points li:last-child { border-bottom: none; }
+.sci-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); margin-top: 6px; flex-shrink: 0; }
+.sci-point-title { font-size: 13px; font-weight: 500; color: var(--white); margin-bottom: 4px; }
+.sci-point-desc { font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.6; }
+.sci-visual { display: flex; flex-direction: column; gap: 16px; }
+.sci-bar-item { }
+.sci-bar-label { font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 8px; display: flex; justify-content: space-between; }
+.sci-bar-track { height: 3px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
+.sci-bar-fill { height: 100%; background: linear-gradient(to right, var(--teal-dark), var(--teal-light)); border-radius: 2px; width: 0; transition: width 1.4s ease; }
+
+/* WHAT'S NOT IN IT */
+.clean-section { padding: 80px 60px; background: var(--cream2); text-align: center; }
+.clean-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; max-width: 900px; margin: 48px auto 0; }
+.clean-item { padding: 28px 20px; background: var(--cream); border: 1px solid var(--sand); transition: border-color 0.3s; }
+.clean-item:hover { border-color: var(--teal); }
+.clean-icon { font-size: 22px; margin-bottom: 10px; }
+.clean-label { font-size: 12px; font-weight: 500; color: var(--dark); margin-bottom: 4px; }
+.clean-sub { font-size: 11px; color: var(--mid); }
+
+/* CERTIFICATIONS */
+.cert-section { padding: 80px 60px; background: var(--cream); }
+.cert-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; max-width: 900px; margin: 48px auto 0; }
+.cert-card { padding: 36px 28px; border: 1px solid var(--sand); background: var(--cream2); text-align: center; }
+.cert-number { font-family: 'Cormorant Garamond', serif; font-size: 52px; font-weight: 300; color: var(--teal); }
+.cert-label { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid); margin-top: 8px; }
+.cert-desc { font-size: 13px; color: var(--mid); line-height: 1.6; margin-top: 10px; }
+
+/* FOOTER */
+footer { background: var(--dark); padding: 60px; display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 48px; border-top: 1px solid rgba(255,255,255,0.06); }
+.footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; color: var(--white); letter-spacing: 0.04em; margin-bottom: 16px; }
+.footer-tagline { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.7; max-width: 260px; }
+.footer-heading { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal-light); margin-bottom: 20px; }
+.footer-links { list-style: none; }
+.footer-links li { margin-bottom: 12px; }
+.footer-links a { font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.3s; }
+.footer-links a:hover { color: var(--white); }
+.footer-bottom { background: var(--dark); padding: 20px 60px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; }
+.footer-bottom p { font-size: 12px; color: rgba(255,255,255,0.3); }
+
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { to { opacity: 1; } }
+@keyframes floatBottle { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+@keyframes spin { from{transform:translate(-50%,-50%) rotate(0deg)} to{transform:translate(-50%,-50%) rotate(360deg)} }
+
+@media (max-width: 900px) {
+  nav { padding: 14px 20px; }
+  .page-hero { grid-template-columns: 1fr; padding: 110px 24px 60px; min-height: auto; }
+  .hero-visual { display: none; }
+  .ingredients-grid { grid-template-columns: 1fr 1fr; }
+  .science-section { grid-template-columns: 1fr; padding: 60px 24px; }
+  .clean-grid { grid-template-columns: repeat(2, 1fr); }
+  .cert-grid { grid-template-columns: 1fr; }
+  .clean-section, .cert-section, .ingredients-section { padding: 60px 24px; }
+  footer { grid-template-columns: 1fr; padding: 40px 20px; }
+  .footer-bottom { padding: 16px 20px; flex-direction: column; gap: 6px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">BounceUp</a>
+  <ul class="nav-links">
+    <li><a href="shop.html">Shop</a></li>
+    <li class="active"><a href="formula.html">Formula</a></li>
+    <li><a href="benefits.html">Benefits</a></li>
+    <li><a href="our-story.html">Our Story</a></li>
+  </ul>
+</nav>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div>
+    <div class="hero-line"></div>
+    <span class="hero-eyebrow">The Science of Bounce</span>
+    <h1 class="hero-title">The <em>Formula</em><br>Behind Every Bottle</h1>
+    <p class="hero-desc">Developed with dermatologists and backed by clinical testing — our formula combines 3 essential ceramides with hyaluronic acid, almond oil, and biotin to restore your hair's natural strength and bounce.</p>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Ceramides</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">7+</div>
+        <div class="stat-label">Key Actives</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Sulfate Free</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="orbit"><div class="orbit-dot"></div></div>
+    <div class="orbit"><div class="orbit-dot"></div></div>
+    <div class="hero-bottle-wrap">
+      <img src="images/product_image.jpg" alt="BounceUp bottle" onerror="this.style.opacity='0.3'">
+    </div>
+  </div>
+</section>
+
+<!-- INGREDIENTS GRID -->
+<section class="ingredients-section">
+  <div class="ingredients-header">
+    <span class="section-eyebrow reveal">Active Ingredients</span>
+    <h2 class="section-title reveal">What's <em>Inside</em></h2>
+  </div>
+  <div class="ingredients-grid">
+    <div class="ing-card reveal">
+      <div class="ing-number">01</div>
+      <div class="ing-line"></div>
+      <div class="ing-name">Almond Oil</div>
+      <div class="ing-role">Core Nourisher</div>
+      <div class="ing-desc">Rich in vitamin E and fatty acids. Deeply nourishes each strand, adding lustrous shine and softness.</div>
+    </div>
+    <div class="ing-card reveal" style="transition-delay:0.08s">
+      <div class="ing-number">02</div>
+      <div class="ing-line"></div>
+      <div class="ing-name">Hyaluronic Acid</div>
+      <div class="ing-role">Hydration Booster</div>
+      <div class="ing-desc">Locks in scalp moisture and helps retain hair's natural hydration for all-day suppleness.</div>
+    </div>
+    <div class="ing-card reveal" style="transition-delay:0.16s">
+      <div class="ing-number">03</div>
+      <div class="ing-line"></div>
+      <div class="ing-name">Ceramide NP · AP · EOP</div>
+      <div class="ing-role">Structural Reinforcer</div>
+      <div class="ing-desc">Three essential ceramides rebuild the hair fiber's lipid layer, reducing breakage and sealing cuticles.</div>
+    </div>
+    <div class="ing-card reveal" style="transition-delay:0.24s">
+      <div class="ing-number">04</div>
+      <div class="ing-line"></div>
+      <div class="ing-name">Biotin</div>
+      <div class="ing-role">Growth Activator</div>
+      <div class="ing-desc">Strengthens keratin infrastructure, promotes healthy hair growth from the root.</div>
+    </div>
+    <div class="ing-card reveal" style="transition-delay:0.32s">
+      <div class="ing-number">05</div>
+      <div class="ing-line"></div>
+      <div class="ing-name">Niacinamide</div>
+      <div class="ing-role">Scalp Balancer</div>
+      <div class="ing-desc">Controls excess sebum, improves scalp health and reduces irritation over time.</div>
+    </div>
+    <div class="ing-card reveal" style="transition-delay:0.4s">
+      <div class="ing-number">06</div>
+      <div class="ing-line"></div>
+      <div class="ing-name">Salicylic Acid</div>
+      <div class="ing-role">Deep Cleanser</div>
+      <div class="ing-desc">Gently exfoliates the scalp, clearing buildup to create the optimal environment for growth.</div>
+    </div>
+    <div class="ing-card reveal" style="transition-delay:0.48s">
+      <div class="ing-number">07</div>
+      <div class="ing-line"></div>
+      <div class="ing-name">Rose Mary Extract</div>
+      <div class="ing-role">Scalp Stimulant</div>
+      <div class="ing-desc">Increases circulation to the scalp and promotes follicle vitality for thicker, fuller hair.</div>
+    </div>
+    <div class="ing-card reveal" style="transition-delay:0.56s">
+      <div class="ing-number">08</div>
+      <div class="ing-line"></div>
+      <div class="ing-name">Sodium Hyaluronate</div>
+      <div class="ing-role">Deep Penetrator</div>
+      <div class="ing-desc">Smaller molecule form of HA that penetrates deeper into the scalp for lasting moisture.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SCIENCE / PERFORMANCE BARS -->
+<section class="science-section">
+  <div>
+    <span class="sci-eyebrow reveal">Clinical Performance</span>
+    <h2 class="sci-title reveal">Tested by<br><em>Dermatologists</em></h2>
+    <p class="sci-desc reveal">Our formula was clinically tested over 8 weeks with participants across all hair types, including color-treated and sensitive scalps. Results speak for themselves.</p>
+    <ul class="sci-points reveal">
+      <li>
+        <div class="sci-dot"></div>
+        <div><div class="sci-point-title">pH Balanced Formula</div><div class="sci-point-desc">Maintains optimal scalp pH to prevent dryness, itching, and barrier disruption.</div></div>
+      </li>
+      <li>
+        <div class="sci-dot"></div>
+        <div><div class="sci-point-title">Non-comedogenic</div><div class="sci-point-desc">Won't clog scalp follicles — safe for sensitive and acne-prone skin.</div></div>
+      </li>
+      <li>
+        <div class="sci-dot"></div>
+        <div><div class="sci-point-title">Suitable for Color-Treated Hair</div><div class="sci-point-desc">Gentle sulfate-free cleansing that won't strip color or damage treated hair.</div></div>
+      </li>
+    </ul>
+  </div>
+  <div class="sci-visual" id="barSection">
+    <div class="sci-bar-item reveal">
+      <div class="sci-bar-label"><span>Hydration Retention</span><span>94%</span></div>
+      <div class="sci-bar-track"><div class="sci-bar-fill" data-width="94"></div></div>
+    </div>
+    <div class="sci-bar-item reveal" style="transition-delay:0.1s">
+      <div class="sci-bar-label"><span>Breakage Reduction</span><span>87%</span></div>
+      <div class="sci-bar-track"><div class="sci-bar-fill" data-width="87"></div></div>
+    </div>
+    <div class="sci-bar-item reveal" style="transition-delay:0.2s">
+      <div class="sci-bar-label"><span>Scalp Health Improvement</span><span>91%</span></div>
+      <div class="sci-bar-track"><div class="sci-bar-fill" data-width="91"></div></div>
+    </div>
+    <div class="sci-bar-item reveal" style="transition-delay:0.3s">
+      <div class="sci-bar-label"><span>Volume &amp; Fullness</span><span>89%</span></div>
+      <div class="sci-bar-track"><div class="sci-bar-fill" data-width="89"></div></div>
+    </div>
+    <div class="sci-bar-item reveal" style="transition-delay:0.4s">
+      <div class="sci-bar-label"><span>Shine &amp; Smoothness</span><span>96%</span></div>
+      <div class="sci-bar-track"><div class="sci-bar-fill" data-width="96"></div></div>
+    </div>
+    <div class="sci-bar-item reveal" style="transition-delay:0.5s">
+      <div class="sci-bar-label"><span>User Satisfaction</span><span>98%</span></div>
+      <div class="sci-bar-track"><div class="sci-bar-fill" data-width="98"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT'S NOT IN IT -->
+<section class="clean-section">
+  <span class="section-eyebrow reveal">Clean Beauty Promise</span>
+  <h2 class="section-title reveal">What We <em>Never</em> Use</h2>
+  <div class="clean-grid">
+    <div class="clean-item reveal">
+      <div class="clean-icon">🚫</div>
+      <div class="clean-label">Sulfates</div>
+      <div class="clean-sub">No SLS or SLES</div>
+    </div>
+    <div class="clean-item reveal" style="transition-delay:0.08s">
+      <div class="clean-icon">🚫</div>
+      <div class="clean-label">Synthetic Fragrance</div>
+      <div class="clean-sub">Completely fragrance-free</div>
+    </div>
+    <div class="clean-item reveal" style="transition-delay:0.16s">
+      <div class="clean-icon">🚫</div>
+      <div class="clean-label">Parabens</div>
+      <div class="clean-sub">No preservative risk</div>
+    </div>
+    <div class="clean-item reveal" style="transition-delay:0.24s">
+      <div class="clean-icon">🚫</div>
+      <div class="clean-label">Harsh Alcohols</div>
+      <div class="clean-sub">No drying agents</div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section class="cert-section">
+  <div style="text-align:center">
+    <span class="section-eyebrow reveal">Certifications & Claims</span>
+    <h2 class="section-title reveal">You Can <em>Trust</em> Every Bottle</h2>
+  </div>
+  <div class="cert-grid">
+    <div class="cert-card reveal">
+      <div class="cert-number">100%</div>
+      <div class="cert-label">Original Formula</div>
+      <div class="cert-desc">Every bottle is authentic and manufactured to our exact specification. No imitations.</div>
+    </div>
+    <div class="cert-card reveal" style="transition-delay:0.1s">
+      <div class="cert-number">pH 5.5</div>
+      <div class="cert-label">Scalp Balanced</div>
+      <div class="cert-desc">Formulated at the exact pH that protects your scalp barrier and keeps it healthy.</div>
+    </div>
+    <div class="cert-card reveal" style="transition-delay:0.2s">
+      <div class="cert-number">3×</div>
+      <div class="cert-label">Ceramide Complex</div>
+      <div class="cert-desc">Three types of ceramides working together — NP, AP, and EOP — for maximum hair protection.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <div class="footer-logo">BounceUp</div>
+    <p class="footer-tagline">Clinically tested, botanically powered. Extremely affordable — creates maximum hair volume.</p>
+  </div>
+  <div>
+    <div class="footer-heading">Navigate</div>
+    <ul class="footer-links">
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="formula.html">Formula</a></li>
+      <li><a href="benefits.html">Benefits</a></li>
+      <li><a href="our-story.html">Our Story</a></li>
+    </ul>
+  </div>
+  <div>
+    <div class="footer-heading">Contact</div>
+    <ul class="footer-links">
+      <li><a href="tel:+923444517806">+92 344 45 178 06</a></li>
+      <li><a href="#">250 ml · Sulfate Free</a></li>
+      <li><a href="#">pH Balanced</a></li>
+      <li><a href="#">100% Original</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <p>© 2026 BounceUp. All rights reserved.</p>
+  <p>For External Use Only. Store in a Cool & Dry Place.</p>
+</div>
+
+<script>
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        // animate bars when they appear
+        e.target.querySelectorAll('.sci-bar-fill').forEach(bar => {
+          bar.style.width = bar.dataset.width + '%';
+        });
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // also watch bar section specifically
+  document.querySelectorAll('.sci-bar-fill').forEach(bar => {
+    const parentReveal = bar.closest('.reveal');
+    if (!parentReveal) {
+      const wrapper = bar.closest('.sci-bar-item');
+      const obs2 = new IntersectionObserver(entries => {
+        entries.forEach(e => { if(e.isIntersecting){ bar.style.width = bar.dataset.width + '%'; obs2.unobserve(e.target); }});
+      }, {threshold: 0.3});
+      obs2.observe(wrapper);
+    }
+  });
+</script>
+</body>
+</html>

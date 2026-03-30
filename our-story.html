@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Story — BounceUp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --cream: #f5f0e8; --cream2: #ede8dc; --sand: #d9cfc0;
+  --teal: #4a9d8a; --teal-dark: #2d7a68; --teal-light: #7bbcad;
+  --dark: #1a1a18; --mid: #4a4a44; --text: #2c2c28;
+  --white: #ffffff; --gold: #c4a55a;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
+
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 16px 60px; display: flex; align-items: center; justify-content: space-between; background: rgba(245,240,232,0.97); backdrop-filter: blur(14px); box-shadow: 0 1px 0 rgba(0,0,0,0.07); }
+.nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: var(--dark); letter-spacing: 0.04em; text-decoration: none; }
+.nav-links { display: flex; gap: 36px; list-style: none; }
+.nav-links a { font-size: 14px; color: var(--mid); text-decoration: none; letter-spacing: 0.06em; position: relative; transition: color 0.3s; }
+.nav-links a::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 1px; background: var(--teal); transition: width 0.3s; }
+.nav-links a:hover::after, .nav-links li.active a::after { width: 100%; }
+.nav-links li.active a { color: var(--dark); font-weight: 500; }
+
+/* HERO — full width editorial */
+.story-hero {
+  min-height: 100vh;
+  background: var(--dark);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: 120px 60px 80px;
+  position: relative; overflow: hidden;
+}
+.story-hero::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234a9d8a' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.story-hero::after {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at center, rgba(74,157,138,0.1) 0%, transparent 65%);
+}
+.story-hero-inner { position: relative; z-index: 1; }
+.story-hero-eyebrow { font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--teal-light); margin-bottom: 20px; display: block; opacity:0; animation: fadeUp 0.7s ease 0.2s forwards; }
+.story-hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(52px, 8vw, 100px); font-weight: 300; color: var(--white); letter-spacing: 0.04em; line-height: 0.95; opacity:0; animation: fadeUp 0.9s ease 0.35s forwards; }
+.story-hero-title em { font-style: italic; color: var(--teal-light); display: block; }
+.story-hero-divider { width: 60px; height: 1px; background: rgba(74,157,138,0.5); margin: 36px auto; opacity:0; animation: fadeIn 0.8s ease 0.7s forwards; }
+.story-hero-quote { font-family: 'Cormorant Garamond', serif; font-size: clamp(18px, 2.5vw, 26px); font-weight: 300; font-style: italic; color: rgba(255,255,255,0.7); max-width: 620px; line-height: 1.6; opacity:0; animation: fadeUp 0.8s ease 0.9s forwards; }
+
+/* SECTION HELPERS */
+.section-eyebrow { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--teal); margin-bottom: 10px; display: block; }
+.section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(30px, 4vw, 48px); font-weight: 300; color: var(--dark); letter-spacing: 0.04em; }
+.section-title em { font-style: italic; color: var(--teal-dark); }
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-left { opacity: 0; transform: translateX(-28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal-left.visible { opacity: 1; transform: translateX(0); }
+.reveal-right { opacity: 0; transform: translateX(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+/* THE ORIGIN */
+.origin-section {
+  padding: 100px 60px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 80px; align-items: center;
+  max-width: 1200px; margin: 0 auto;
+}
+.origin-content p {
+  font-size: 15px; color: var(--mid); line-height: 2; margin-bottom: 20px;
+}
+.origin-content p:first-of-type { font-size: 18px; color: var(--text); font-weight: 400; }
+.origin-visual {
+  background: linear-gradient(160deg, #e8f5f0, #d0ece4);
+  min-height: 460px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.origin-visual img {
+  max-height: 380px; width: auto; object-fit: contain;
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.15));
+  animation: floatBottle 4.5s ease-in-out infinite;
+}
+.origin-visual-badge {
+  position: absolute; bottom: 28px; left: 28px;
+  background: var(--dark); color: var(--white);
+  padding: 14px 20px; font-family: 'Cormorant Garamond', serif;
+  font-size: 14px; font-weight: 300; line-height: 1.4;
+}
+.origin-visual-badge strong { display: block; font-size: 20px; font-weight: 600; }
+
+/* TIMELINE */
+.timeline-section { background: var(--dark); padding: 100px 60px; }
+.timeline-section .section-title { color: var(--white); }
+.timeline-section .section-title em { color: var(--teal-light); }
+.timeline { margin-top: 64px; max-width: 800px; position: relative; }
+.timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: rgba(74,157,138,0.25); }
+.timeline-item { padding: 0 0 56px 48px; position: relative; }
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-dot { position: absolute; left: -5px; top: 6px; width: 11px; height: 11px; border-radius: 50%; background: var(--teal); }
+.timeline-year { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--teal-light); margin-bottom: 8px; }
+.timeline-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 300; color: var(--white); margin-bottom: 10px; }
+.timeline-desc { font-size: 14px; color: rgba(255,255,255,0.5); line-height: 1.8; max-width: 560px; }
+
+/* VALUES */
+.values-section { padding: 100px 60px; background: var(--cream2); }
+.values-header { text-align: center; margin-bottom: 64px; }
+.values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; max-width: 1000px; margin: 0 auto; }
+.value-item {
+  padding: 48px 36px; background: var(--cream);
+  border-top: 3px solid transparent;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.value-item:hover { border-color: var(--teal); transform: translateY(-4px); }
+.value-num { font-family: 'Cormorant Garamond', serif; font-size: 52px; font-weight: 300; color: rgba(74,157,138,0.2); line-height: 1; margin-bottom: 12px; }
+.value-title { font-size: 15px; font-weight: 500; color: var(--dark); margin-bottom: 12px; }
+.value-desc { font-size: 13px; color: var(--mid); line-height: 1.8; }
+
+/* TEAM / PEOPLE */
+.mission-section {
+  padding: 100px 60px;
+  background: var(--cream);
+  display: grid; grid-template-columns: 1fr 1.4fr;
+  gap: 80px; align-items: center;
+}
+.mission-pull {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(28px, 4vw, 46px);
+  font-weight: 300;
+  line-height: 1.25;
+  color: var(--dark);
+}
+.mission-pull em { font-style: italic; color: var(--teal-dark); }
+.mission-body p { font-size: 15px; color: var(--mid); line-height: 2; margin-bottom: 20px; }
+.mission-sig { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-style: italic; color: var(--teal-dark); margin-top: 24px; }
+
+/* STATS STRIP */
+.stats-strip { background: var(--teal-dark); padding: 64px 60px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+.stat-item { text-align: center; padding: 20px; }
+.stat-number { font-family: 'Cormorant Garamond', serif; font-size: 52px; font-weight: 300; color: var(--white); line-height: 1; }
+.stat-label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.65); margin-top: 8px; }
+
+/* PROMISE */
+.promise-section { background: var(--dark); padding: 100px 60px; text-align: center; }
+.promise-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(34px, 5vw, 64px); font-weight: 300; color: var(--white); line-height: 1.1; margin-bottom: 24px; }
+.promise-title em { font-style: italic; color: var(--teal-light); }
+.promise-desc { font-size: 15px; color: rgba(255,255,255,0.5); line-height: 1.9; max-width: 600px; margin: 0 auto 48px; }
+.promise-cta { display: inline-block; padding: 14px 48px; border: 1px solid var(--teal); color: var(--teal-light); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; transition: all 0.3s; }
+.promise-cta:hover { background: var(--teal); color: var(--white); }
+
+/* FOOTER */
+footer { background: var(--dark); padding: 60px; display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 48px; border-top: 1px solid rgba(255,255,255,0.06); }
+.footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; color: var(--white); letter-spacing: 0.04em; margin-bottom: 16px; }
+.footer-tagline { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.7; max-width: 260px; }
+.footer-heading { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal-light); margin-bottom: 20px; }
+.footer-links { list-style: none; }
+.footer-links li { margin-bottom: 12px; }
+.footer-links a { font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.3s; }
+.footer-links a:hover { color: var(--white); }
+.footer-bottom { background: var(--dark); padding: 20px 60px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; }
+.footer-bottom p { font-size: 12px; color: rgba(255,255,255,0.3); }
+
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { to { opacity: 1; } }
+@keyframes floatBottle { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+
+@media (max-width: 900px) {
+  nav { padding: 14px 20px; }
+  .story-hero { padding: 110px 24px 80px; min-height: 80vh; }
+  .origin-section { grid-template-columns: 1fr; padding: 60px 24px; }
+  .origin-visual { min-height: 260px; }
+  .timeline-section { padding: 60px 24px; }
+  .values-grid { grid-template-columns: 1fr; }
+  .values-section { padding: 60px 24px; }
+  .mission-section { grid-template-columns: 1fr; padding: 60px 24px; }
+  .stats-strip { grid-template-columns: repeat(2, 1fr); padding: 40px 24px; }
+  .promise-section { padding: 60px 24px; }
+  footer { grid-template-columns: 1fr; padding: 40px 20px; }
+  .footer-bottom { padding: 16px 20px; flex-direction: column; gap: 6px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">BounceUp</a>
+  <ul class="nav-links">
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="formula.html">Formula</a></li>
+    <li><a href="benefits.html">Benefits</a></li>
+    <li class="active"><a href="our-story.html">Our Story</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="story-hero">
+  <div class="story-hero-inner">
+    <span class="story-hero-eyebrow">Our Story</span>
+    <h1 class="story-hero-title">Born From<br><em>Passion</em></h1>
+    <div class="story-hero-divider"></div>
+    <p class="story-hero-quote">"Extremely affordable, creates maximum hair volume."<br>— That was the promise. We built a product to keep it.</p>
+  </div>
+</section>
+
+<!-- ORIGIN -->
+<section class="origin-section">
+  <div class="origin-content reveal-left">
+    <span class="section-eyebrow">Where It Started</span>
+    <h2 class="section-title" style="margin-bottom:28px">The <em>Beginning</em></h2>
+    <p>BounceUp was born from a simple but powerful belief: that truly effective, dermatologist-quality haircare should be accessible to everyone — not just those who can afford luxury price tags.</p>
+    <p>We saw people spending a fortune on shampoos that made big promises but delivered little. Hair that felt stripped. Scalps that felt irritated. Bottles that ran out too fast. We decided to do something different.</p>
+    <p>Working alongside dermatologists and hair scientists, we developed a formula that combined the most effective active ingredients — ceramides, hyaluronic acid, biotin, almond oil — in a concentration that actually makes a difference.</p>
+    <p>The result is BounceUp: a clinically tested shampoo system that enhances your hair's natural bounce and is extremely affordable. No compromise. No shortcuts. 100% original.</p>
+  </div>
+  <div class="origin-visual reveal-right">
+    <img src="images/product_image.jpg" alt="BounceUp original bottle" onerror="this.style.opacity='0.2'">
+    <div class="origin-visual-badge">
+      <strong>250 ml</strong>
+      Enhances Natural Bounce.
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="timeline-section">
+  <span class="section-eyebrow reveal" style="color:var(--teal-light)">Our Journey</span>
+  <h2 class="section-title reveal">How We <em>Got Here</em></h2>
+  <div class="timeline">
+    <div class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">The Idea</div>
+      <div class="timeline-title">A Problem Worth Solving</div>
+      <div class="timeline-desc">Frustrated by overpriced, underperforming shampoos, our founder began researching what ingredients actually make a difference. The list was shorter than expected — but more powerful than imagined.</div>
+    </div>
+    <div class="timeline-item reveal" style="transition-delay:0.1s">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">Research & Development</div>
+      <div class="timeline-title">Partnering with Dermatologists</div>
+      <div class="timeline-desc">We collaborated with skin and hair specialists to formulate a system built on clinical evidence. Every ingredient earned its place by proving measurable benefit to hair and scalp health.</div>
+    </div>
+    <div class="timeline-item reveal" style="transition-delay:0.2s">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">Clinical Testing</div>
+      <div class="timeline-title">Tested, Verified, Trusted</div>
+      <div class="timeline-desc">BounceUp was clinically tested across diverse hair types — straight, wavy, curly, color-treated. Results showed consistent improvement in hydration, volume, breakage reduction, and scalp health.</div>
+    </div>
+    <div class="timeline-item reveal" style="transition-delay:0.3s">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">Launch</div>
+      <div class="timeline-title">BounceUp Hits the Shelves</div>
+      <div class="timeline-desc">With our full formula finalized and independently verified as 100% original, BounceUp launched at an accessible price point. The mission: maximum performance, minimum cost.</div>
+    </div>
+    <div class="timeline-item reveal" style="transition-delay:0.4s">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">Today</div>
+      <div class="timeline-title">Growing, Improving, Staying True</div>
+      <div class="timeline-desc">We continue to improve and expand the BounceUp range. Every new formula variant stays true to our original promise — clean ingredients, clinical efficacy, and extreme affordability.</div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="values-section">
+  <div class="values-header">
+    <span class="section-eyebrow reveal">What We Stand For</span>
+    <h2 class="section-title reveal">Our <em>Core Values</em></h2>
+  </div>
+  <div class="values-grid">
+    <div class="value-item reveal">
+      <div class="value-num">01</div>
+      <div class="value-title">Accessibility First</div>
+      <div class="value-desc">Great haircare should not be a luxury. We build every formula to deliver premium results at a price anyone can afford. No compromise on quality to cut cost.</div>
+    </div>
+    <div class="value-item reveal" style="transition-delay:0.1s">
+      <div class="value-num">02</div>
+      <div class="value-title">Ingredient Honesty</div>
+      <div class="value-desc">Every ingredient in BounceUp is there for a reason — backed by science, not marketing. We never use fillers or unnecessary additives. Just what works.</div>
+    </div>
+    <div class="value-item reveal" style="transition-delay:0.2s">
+      <div class="value-num">03</div>
+      <div class="value-title">Clean Formulation</div>
+      <div class="value-desc">No sulfates. No synthetic fragrance. No parabens. We build formulas that are kind to your scalp barrier and safe for everyday use on all hair types.</div>
+    </div>
+    <div class="value-item reveal" style="transition-delay:0.3s">
+      <div class="value-num">04</div>
+      <div class="value-title">Dermatologist Partnership</div>
+      <div class="value-desc">Every formula is developed with qualified dermatologists. We don't create products in isolation — we validate every claim with clinical expertise.</div>
+    </div>
+    <div class="value-item reveal" style="transition-delay:0.4s">
+      <div class="value-num">05</div>
+      <div class="value-title">100% Originality</div>
+      <div class="value-desc">Every BounceUp bottle is the real thing. We take authenticity seriously — our unique formulation code ensures no counterfeit can pass as original.</div>
+    </div>
+    <div class="value-item reveal" style="transition-delay:0.5s">
+      <div class="value-num">06</div>
+      <div class="value-title">Sustainable Sourcing</div>
+      <div class="value-desc">Our botanical ingredients — almond oil, rosemary extract — are ethically and sustainably sourced. We are committed to minimizing our environmental footprint.</div>
+    </div>
+  </div>
+</section>
+
+<!-- MISSION STATEMENT -->
+<section class="mission-section">
+  <div class="mission-pull reveal-left">
+    "We built BounceUp because<br><em>great hair</em> should be for everyone — not a privilege."
+  </div>
+  <div class="reveal-right">
+    <p>Our mission has never changed from day one: create haircare that genuinely works, made from ingredients you can understand and trust, sold at a price that respects your budget.</p>
+    <p>We believe in transparency. That's why we publish our full ingredient list, explain exactly what each active does, and never make a claim we can't back with clinical evidence.</p>
+    <p>BounceUp isn't just a shampoo. It's a commitment — to your hair, to your scalp health, and to the idea that science and affordability can exist in the same bottle.</p>
+    <div class="mission-sig">— The BounceUp Team</div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stat-item reveal">
+    <div class="stat-number">3</div>
+    <div class="stat-label">Ceramide Types</div>
+  </div>
+  <div class="stat-item reveal" style="transition-delay:0.1s">
+    <div class="stat-number">7+</div>
+    <div class="stat-label">Active Ingredients</div>
+  </div>
+  <div class="stat-item reveal" style="transition-delay:0.2s">
+    <div class="stat-number">0</div>
+    <div class="stat-label">Sulfates Used</div>
+  </div>
+  <div class="stat-item reveal" style="transition-delay:0.3s">
+    <div class="stat-number">100%</div>
+    <div class="stat-label">Original Formula</div>
+  </div>
+</div>
+
+<!-- PROMISE -->
+<section class="promise-section">
+  <h2 class="promise-title reveal">Our Promise<br>to <em>You</em></h2>
+  <p class="promise-desc reveal">Every bottle of BounceUp is made with integrity. If it's in the bottle, it earned its place. If we claim it works, we can prove it. And if you're not satisfied — we want to hear from you.</p>
+  <a href="shop.html" class="promise-cta reveal">Shop BounceUp →</a>
+</section>
+
+<footer>
+  <div>
+    <div class="footer-logo">BounceUp</div>
+    <p class="footer-tagline">Clinically tested, botanically powered. Extremely affordable — creates maximum hair volume.</p>
+  </div>
+  <div>
+    <div class="footer-heading">Navigate</div>
+    <ul class="footer-links">
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="formula.html">Formula</a></li>
+      <li><a href="benefits.html">Benefits</a></li>
+      <li><a href="our-story.html">Our Story</a></li>
+    </ul>
+  </div>
+  <div>
+    <div class="footer-heading">Contact</div>
+    <ul class="footer-links">
+      <li><a href="tel:+923444517806">+92 344 45 178 06</a></li>
+      <li><a href="#">250 ml · Sulfate Free</a></li>
+      <li><a href="#">pH Balanced</a></li>
+      <li><a href="#">100% Original</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <p>© 2026 BounceUp. All rights reserved.</p>
+  <p>For External Use Only. Store in a Cool & Dry Place.</p>
+</div>
+
+<script>
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

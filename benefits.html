@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Benefits — BounceUp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --cream: #f5f0e8; --cream2: #ede8dc; --sand: #d9cfc0;
+  --teal: #4a9d8a; --teal-dark: #2d7a68; --teal-light: #7bbcad;
+  --dark: #1a1a18; --mid: #4a4a44; --text: #2c2c28;
+  --white: #ffffff; --gold: #c4a55a;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
+
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 16px 60px; display: flex; align-items: center; justify-content: space-between; background: rgba(245,240,232,0.97); backdrop-filter: blur(14px); box-shadow: 0 1px 0 rgba(0,0,0,0.07); }
+.nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: var(--dark); letter-spacing: 0.04em; text-decoration: none; }
+.nav-links { display: flex; gap: 36px; list-style: none; }
+.nav-links a { font-size: 14px; color: var(--mid); text-decoration: none; letter-spacing: 0.06em; position: relative; transition: color 0.3s; }
+.nav-links a::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 1px; background: var(--teal); transition: width 0.3s; }
+.nav-links a:hover::after, .nav-links li.active a::after { width: 100%; }
+.nav-links li.active a { color: var(--dark); font-weight: 500; }
+
+/* HERO */
+.page-hero {
+  padding: 140px 60px 100px;
+  background: var(--dark);
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+.page-hero::before { content: ''; position: absolute; top: -200px; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(74,157,138,0.12) 0%, transparent 70%); }
+.hero-eyebrow { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--teal-light); margin-bottom: 14px; display: block; opacity:0; animation: fadeUp 0.7s ease 0.2s forwards; }
+.hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(44px, 7vw, 86px); font-weight: 300; color: var(--white); letter-spacing: 0.04em; line-height: 1.02; opacity:0; animation: fadeUp 0.8s ease 0.35s forwards; }
+.hero-title em { font-style: italic; color: var(--teal-light); }
+.hero-desc { font-size: 16px; color: rgba(255,255,255,0.5); line-height: 1.8; max-width: 540px; margin: 20px auto 0; opacity:0; animation: fadeUp 0.8s ease 0.5s forwards; }
+
+/* SECTION HELPERS */
+.section-eyebrow { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--teal); margin-bottom: 10px; display: block; }
+.section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(30px, 4vw, 48px); font-weight: 300; color: var(--dark); letter-spacing: 0.04em; }
+.section-title em { font-style: italic; color: var(--teal-dark); }
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-left { opacity: 0; transform: translateX(-28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal-left.visible { opacity: 1; transform: translateX(0); }
+.reveal-right { opacity: 0; transform: translateX(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+/* MAIN BENEFITS */
+.benefits-main { padding: 100px 60px; }
+.benefits-intro { text-align: center; margin-bottom: 80px; }
+.benefit-row {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0; max-width: 1100px; margin: 0 auto 2px;
+  border: 1px solid var(--sand);
+  overflow: hidden;
+}
+.benefit-row:nth-child(even) .br-content { order: 2; }
+.benefit-row:nth-child(even) .br-visual { order: 1; }
+.br-content {
+  padding: 64px 52px;
+  background: var(--cream2);
+  display: flex; flex-direction: column; justify-content: center;
+}
+.br-num { font-family: 'Cormorant Garamond', serif; font-size: 80px; font-weight: 300; color: rgba(74,157,138,0.15); line-height: 1; margin-bottom: 8px; }
+.br-title { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 300; color: var(--dark); margin-bottom: 16px; }
+.br-title em { font-style: italic; color: var(--teal-dark); }
+.br-desc { font-size: 14px; color: var(--mid); line-height: 1.9; margin-bottom: 20px; max-width: 380px; }
+.br-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.br-tag { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 14px; border: 1px solid var(--sand); color: var(--mid); background: var(--cream); }
+.br-visual {
+  background: linear-gradient(160deg, #e8f5f0, #d0ece4);
+  display: flex; align-items: center; justify-content: center;
+  min-height: 320px; position: relative; overflow: hidden;
+}
+.br-visual.v2 { background: linear-gradient(160deg, #ddeef8, #c8e0ef); }
+.br-visual.v3 { background: linear-gradient(160deg, #f0ece0, #e2d9c8); }
+.br-visual.v4 { background: linear-gradient(160deg, #eaf0e8, #d4e5d0); }
+.br-visual.v5 { background: linear-gradient(160deg, #f8f0e8, #ede4d4); }
+.br-visual img { height: 75%; width: auto; object-fit: contain; filter: drop-shadow(0 12px 28px rgba(0,0,0,0.12)); }
+.br-visual-text { position: absolute; bottom: 20px; right: 20px; font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300; color: rgba(0,0,0,0.08); line-height: 1; }
+
+/* BEFORE/AFTER / COMPARISON */
+.comparison-section { background: var(--dark); padding: 100px 60px; text-align: center; }
+.comparison-section .section-title { color: var(--white); margin-bottom: 16px; }
+.comparison-section .section-title em { color: var(--teal-light); }
+.comp-subtitle { font-size: 14px; color: rgba(255,255,255,0.5); margin-bottom: 60px; max-width: 480px; margin-left: auto; margin-right: auto; }
+.comparison-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; max-width: 900px; margin: 0 auto; }
+.comp-item { background: rgba(255,255,255,0.04); padding: 48px 28px; transition: background 0.3s; }
+.comp-item:hover { background: rgba(74,157,138,0.1); }
+.comp-icon { font-size: 32px; margin-bottom: 16px; }
+.comp-week { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal-light); margin-bottom: 8px; }
+.comp-result { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 300; color: var(--white); margin-bottom: 10px; }
+.comp-desc { font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.7; }
+
+/* HAIR TYPES */
+.hairtypes-section { padding: 90px 60px; background: var(--cream2); }
+.hairtypes-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; max-width: 1000px; margin: 48px auto 0; }
+.ht-card { background: var(--cream); border: 1px solid var(--sand); padding: 32px 22px; text-align: center; transition: border-color 0.3s, transform 0.3s; }
+.ht-card:hover { border-color: var(--teal); transform: translateY(-4px); }
+.ht-icon { font-size: 28px; margin-bottom: 12px; }
+.ht-name { font-size: 14px; font-weight: 500; color: var(--dark); margin-bottom: 8px; }
+.ht-desc { font-size: 12px; color: var(--mid); line-height: 1.6; }
+
+/* HOW TO USE */
+.how-section { background: var(--cream); padding: 90px 60px; }
+.how-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; max-width: 1100px; margin: 0 auto; }
+.how-steps { margin-top: 36px; }
+.how-step { display: flex; gap: 24px; padding: 24px 0; border-bottom: 1px solid var(--sand); align-items: flex-start; }
+.how-step:first-child { border-top: 1px solid var(--sand); }
+.step-circle { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--teal); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 300; color: var(--teal); flex-shrink: 0; }
+.step-content h4 { font-size: 14px; font-weight: 500; color: var(--dark); margin-bottom: 6px; }
+.step-content p { font-size: 13px; color: var(--mid); line-height: 1.7; }
+.how-visual { display: flex; align-items: center; justify-content: center; background: linear-gradient(160deg, #e8f5f0, #d0ece4); min-height: 420px; }
+.how-visual img { max-height: 340px; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.12)); animation: floatBottle 4s ease-in-out infinite; }
+
+/* CTA SECTION */
+.cta-section { background: var(--teal-dark); padding: 80px 60px; text-align: center; }
+.cta-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(32px, 4vw, 52px); font-weight: 300; color: var(--white); margin-bottom: 16px; }
+.cta-title em { font-style: italic; }
+.cta-desc { font-size: 14px; color: rgba(255,255,255,0.7); margin-bottom: 36px; }
+.cta-btn { display: inline-block; padding: 14px 44px; background: var(--white); color: var(--teal-dark); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; font-weight: 500; transition: all 0.3s; }
+.cta-btn:hover { background: var(--dark); color: var(--white); }
+
+/* FOOTER */
+footer { background: var(--dark); padding: 60px; display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 48px; border-top: 1px solid rgba(255,255,255,0.06); }
+.footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; color: var(--white); letter-spacing: 0.04em; margin-bottom: 16px; }
+.footer-tagline { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.7; max-width: 260px; }
+.footer-heading { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal-light); margin-bottom: 20px; }
+.footer-links { list-style: none; }
+.footer-links li { margin-bottom: 12px; }
+.footer-links a { font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.3s; }
+.footer-links a:hover { color: var(--white); }
+.footer-bottom { background: var(--dark); padding: 20px 60px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; }
+.footer-bottom p { font-size: 12px; color: rgba(255,255,255,0.3); }
+
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+@keyframes floatBottle { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+
+@media (max-width: 900px) {
+  nav { padding: 14px 20px; }
+  .page-hero { padding: 110px 24px 60px; }
+  .benefits-main, .comparison-section, .hairtypes-section, .how-section, .cta-section { padding: 60px 24px; }
+  .benefit-row { grid-template-columns: 1fr; }
+  .benefit-row:nth-child(even) .br-content { order: 1; }
+  .benefit-row:nth-child(even) .br-visual { order: 2; }
+  .comparison-grid { grid-template-columns: 1fr; }
+  .hairtypes-grid { grid-template-columns: repeat(2, 1fr); }
+  .how-grid { grid-template-columns: 1fr; }
+  .how-visual { display: none; }
+  footer { grid-template-columns: 1fr; padding: 40px 20px; }
+  .footer-bottom { padding: 16px 20px; flex-direction: column; gap: 6px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">BounceUp</a>
+  <ul class="nav-links">
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="formula.html">Formula</a></li>
+    <li class="active"><a href="benefits.html">Benefits</a></li>
+    <li><a href="our-story.html">Our Story</a></li>
+  </ul>
+</nav>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <span class="hero-eyebrow">Why BounceUp Works</span>
+  <h1 class="hero-title">Real <em>Benefits</em>,<br>Real Results</h1>
+  <p class="hero-desc">From the first wash, BounceUp starts working on your hair and scalp. Here's exactly what happens — and why.</p>
+</section>
+
+<!-- MAIN BENEFITS -->
+<section class="benefits-main">
+  <div class="benefits-intro">
+    <span class="section-eyebrow reveal">Five Core Benefits</span>
+    <h2 class="section-title reveal">What BounceUp <em>Does</em> For You</h2>
+  </div>
+
+  <div class="benefit-row">
+    <div class="br-content reveal-left">
+      <div class="br-num">01</div>
+      <h3 class="br-title">Boosts <em>Hair Fullness</em></h3>
+      <p class="br-desc">Almond oil and ceramides work together to add natural body and volume. Each strand is coated in nourishing actives that expand its diameter slightly — making your whole head look visibly fuller from the very first wash.</p>
+      <div class="br-tags">
+        <span class="br-tag">Almond Oil</span>
+        <span class="br-tag">Ceramides</span>
+        <span class="br-tag">Volume Boost</span>
+      </div>
+    </div>
+    <div class="br-visual reveal-right">
+      <img src="images/product_image.jpg" alt="BounceUp" onerror="this.style.opacity='0.2'">
+      <div class="br-visual-text">Full</div>
+    </div>
+  </div>
+
+  <div class="benefit-row">
+    <div class="br-visual v2 reveal-left">
+      <img src="images/product_image.jpg" alt="BounceUp" onerror="this.style.opacity='0.2'">
+      <div class="br-visual-text">Strong</div>
+    </div>
+    <div class="br-content reveal-right">
+      <div class="br-num">02</div>
+      <h3 class="br-title">Prevents <em>Breakage</em></h3>
+      <p class="br-desc">Our tri-ceramide complex (NP, AP, EOP) rebuilds the lipid layer within the hair cuticle. This seals gaps in the fiber, dramatically reducing snapping, splitting, and everyday breakage.</p>
+      <div class="br-tags">
+        <span class="br-tag">Ceramide NP</span>
+        <span class="br-tag">Ceramide AP</span>
+        <span class="br-tag">Ceramide EOP</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="benefit-row">
+    <div class="br-content reveal-left">
+      <div class="br-num">03</div>
+      <h3 class="br-title">Enhances <em>Natural Bounce</em></h3>
+      <p class="br-desc">Hyaluronic acid and sodium hyaluronate hydrate each strand from within, restoring elasticity. The result is hair that springs back naturally — with the lively bounce of healthy, well-nourished hair.</p>
+      <div class="br-tags">
+        <span class="br-tag">Hyaluronic Acid</span>
+        <span class="br-tag">Elasticity</span>
+        <span class="br-tag">Natural Bounce</span>
+      </div>
+    </div>
+    <div class="br-visual v3 reveal-right">
+      <img src="images/product_image.jpg" alt="BounceUp" onerror="this.style.opacity='0.2'">
+      <div class="br-visual-text">Bounce</div>
+    </div>
+  </div>
+
+  <div class="benefit-row">
+    <div class="br-visual v4 reveal-left">
+      <img src="images/product_image.jpg" alt="BounceUp" onerror="this.style.opacity='0.2'">
+      <div class="br-visual-text">Silk</div>
+    </div>
+    <div class="br-content reveal-right">
+      <div class="br-num">04</div>
+      <h3 class="br-title">Soft &amp; <em>Smooth Texture</em></h3>
+      <p class="br-desc">Amodimethicone and cocamide MIP a create a silky coating on each strand. Hair feels luxuriously smooth to the touch without any heaviness or buildup — light, clean, and silky.</p>
+      <div class="br-tags">
+        <span class="br-tag">Amodimethicone</span>
+        <span class="br-tag">Anti-Frizz</span>
+        <span class="br-tag">Smoothing</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="benefit-row">
+    <div class="br-content reveal-left">
+      <div class="br-num">05</div>
+      <h3 class="br-title">Promotes <em>Healthy Scalp</em></h3>
+      <p class="br-desc">Salicylic acid gently exfoliates the scalp, clearing buildup. Niacinamide regulates sebum. Rosemary extract stimulates follicles. Together they create the ideal environment for long-term scalp health.</p>
+      <div class="br-tags">
+        <span class="br-tag">Salicylic Acid</span>
+        <span class="br-tag">Niacinamide</span>
+        <span class="br-tag">Rosemary</span>
+      </div>
+    </div>
+    <div class="br-visual v5 reveal-right">
+      <img src="images/product_image.jpg" alt="BounceUp" onerror="this.style.opacity='0.2'">
+      <div class="br-visual-text">Scalp</div>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS TIMELINE -->
+<section class="comparison-section">
+  <span class="section-eyebrow reveal" style="color:var(--teal-light)">Results Timeline</span>
+  <h2 class="section-title reveal">What to Expect,<br><em>Week by Week</em></h2>
+  <p class="comp-subtitle reveal">Results vary by hair type, but here's what most BounceUp users experience:</p>
+  <div class="comparison-grid">
+    <div class="comp-item reveal">
+      <div class="comp-icon">💧</div>
+      <div class="comp-week">Week 1</div>
+      <div class="comp-result">Cleaner Scalp</div>
+      <div class="comp-desc">Scalp feels cleaner longer. Less oil and buildup. Hair smells fresh.</div>
+    </div>
+    <div class="comp-item reveal" style="transition-delay:0.1s">
+      <div class="comp-icon">✨</div>
+      <div class="comp-week">Week 2–3</div>
+      <div class="comp-result">Visible Softness</div>
+      <div class="comp-desc">Hair noticeably softer and smoother. Less breakage when brushing.</div>
+    </div>
+    <div class="comp-item reveal" style="transition-delay:0.2s">
+      <div class="comp-icon">🌿</div>
+      <div class="comp-week">Week 4–8</div>
+      <div class="comp-result">Full Transformation</div>
+      <div class="comp-desc">Volume, bounce, and shine at their peak. Scalp health fully improved.</div>
+    </div>
+  </div>
+</section>
+
+<!-- HAIR TYPES -->
+<section class="hairtypes-section">
+  <div style="text-align:center">
+    <span class="section-eyebrow reveal">For Every Hair Type</span>
+    <h2 class="section-title reveal">Suitable For <em>All</em></h2>
+  </div>
+  <div class="hairtypes-grid">
+    <div class="ht-card reveal">
+      <div class="ht-icon">〰️</div>
+      <div class="ht-name">Straight Hair</div>
+      <div class="ht-desc">Adds volume and gloss without weighing straight hair down.</div>
+    </div>
+    <div class="ht-card reveal" style="transition-delay:0.1s">
+      <div class="ht-icon">🌊</div>
+      <div class="ht-name">Wavy Hair</div>
+      <div class="ht-desc">Defines waves naturally while reducing frizz and boosting shine.</div>
+    </div>
+    <div class="ht-card reveal" style="transition-delay:0.2s">
+      <div class="ht-icon">🌀</div>
+      <div class="ht-name">Curly Hair</div>
+      <div class="ht-desc">Hydrates and defines curls. Reduces breakage and enhances bounce.</div>
+    </div>
+    <div class="ht-card reveal" style="transition-delay:0.3s">
+      <div class="ht-icon">🎨</div>
+      <div class="ht-name">Color-Treated</div>
+      <div class="ht-desc">Sulfate-free and gentle — safe for all color-treated and chemically processed hair.</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW TO USE -->
+<section class="how-section">
+  <div class="how-grid">
+    <div>
+      <span class="section-eyebrow reveal">Application Guide</span>
+      <h2 class="section-title reveal">How to Use <em>BounceUp</em></h2>
+      <div class="how-steps">
+        <div class="how-step reveal">
+          <div class="step-circle">1</div>
+          <div class="step-content">
+            <h4>Wet Hair Thoroughly</h4>
+            <p>Soak your hair and scalp completely with warm water. This opens the cuticle and allows ingredients to penetrate.</p>
+          </div>
+        </div>
+        <div class="how-step reveal" style="transition-delay:0.1s">
+          <div class="step-circle">2</div>
+          <div class="step-content">
+            <h4>Apply & Massage</h4>
+            <p>Pump shampoo into hands, apply to scalp first, then work through lengths. Massage in circular motions for 60 seconds.</p>
+          </div>
+        </div>
+        <div class="how-step reveal" style="transition-delay:0.2s">
+          <div class="step-circle">3</div>
+          <div class="step-content">
+            <h4>Rinse Completely</h4>
+            <p>Rinse thoroughly until water runs clear. Avoid direct contact with eyes.</p>
+          </div>
+        </div>
+        <div class="how-step reveal" style="transition-delay:0.3s">
+          <div class="step-circle">4</div>
+          <div class="step-content">
+            <h4>Follow with Conditioner</h4>
+            <p>For best results, follow with BounceUp Conditioner. Leave for 2 minutes then rinse.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="how-visual reveal-right">
+      <img src="images/product_image.jpg" alt="BounceUp directions" onerror="this.style.opacity='0.2'">
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2 class="cta-title reveal">Ready to <em>Experience It?</em></h2>
+  <p class="cta-desc reveal">250 ml. Sulfate-free. Fragrance-free. 100% original. Extremely affordable.</p>
+  <a href="shop.html" class="cta-btn reveal">Shop Now →</a>
+</section>
+
+<footer>
+  <div>
+    <div class="footer-logo">BounceUp</div>
+    <p class="footer-tagline">Clinically tested, botanically powered. Extremely affordable — creates maximum hair volume.</p>
+  </div>
+  <div>
+    <div class="footer-heading">Navigate</div>
+    <ul class="footer-links">
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="formula.html">Formula</a></li>
+      <li><a href="benefits.html">Benefits</a></li>
+      <li><a href="our-story.html">Our Story</a></li>
+    </ul>
+  </div>
+  <div>
+    <div class="footer-heading">Contact</div>
+    <ul class="footer-links">
+      <li><a href="tel:+923444517806">+92 344 45 178 06</a></li>
+      <li><a href="#">250 ml · Sulfate Free</a></li>
+      <li><a href="#">pH Balanced</a></li>
+      <li><a href="#">100% Original</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <p>© 2026 BounceUp. All rights reserved.</p>
+  <p>For External Use Only. Store in a Cool & Dry Place.</p>
+</div>
+
+<script>
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
